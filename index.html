@@ -31,8 +31,6 @@ body{
 .status.err{color:var(--err)}
 main{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 104px}
 h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);margin:0 0 10px;font-weight:600}
-
-/* ---------- танцы ---------- */
 .dance-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .dance-card{display:flex;flex-direction:column;align-items:flex-start;gap:2px;
   padding:15px 14px;border-radius:18px;border:1px solid var(--line);
@@ -42,8 +40,6 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim)
 .dance-card .emoji{font-size:26px;line-height:1.2}
 .dance-card .name{font-size:17px;font-weight:700}
 .dance-card .tag{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em}
-
-/* ---------- конструктор ---------- */
 .builder-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
 .builder-head h2{margin:0}
 .btn{border:1px solid var(--line);background:var(--card2);color:var(--txt);
@@ -51,7 +47,6 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim)
 .btn:active{transform:scale(.96)}
 .btn.primary{background:var(--acc);border-color:var(--acc);color:#08101f;font-weight:700}
 .btn.danger{color:var(--err);border-color:#3a2430}
-
 .program{min-height:80px;padding-bottom:6px}
 .block{border:1px solid var(--line);border-left:4px solid var(--cat,var(--misc));
   background:var(--card2);border-radius:12px;padding:7px 8px;margin-bottom:7px}
@@ -70,36 +65,34 @@ h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim)
   border:1px dashed #33405a;background:transparent;color:var(--dim);
   font-family:inherit;font-size:12.5px}
 .add-btn:active{background:#161d29}
-
 .inp{background:#0b0f16;border:1px solid var(--line);color:var(--txt);
   border-radius:8px;padding:4px 6px;font-size:13px;font-family:inherit;
   min-width:0;-webkit-appearance:none;appearance:none}
-.inp.num{width:54px;text-align:center}
+.inp.num{width:60px;text-align:center}
 .inp.expr{width:64px;text-align:center}
 .inp.name{width:62px;text-align:center;color:var(--var)}
+input[type="number"].inp::-webkit-outer-spin-button,
+input[type="number"].inp::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type="number"].inp{-moz-appearance:textfield}
 select.inp{padding-right:4px}
 .cond{display:inline-flex;gap:4px;align-items:center}
 .hint{font-size:11.5px;color:var(--dim);line-height:1.5;margin:10px 2px 0}
-
 .cat-motion{--cat:var(--motion)}
 .cat-emotion{--cat:var(--emotion)}
 .cat-var{--cat:var(--var)}
 .cat-ctrl{--cat:var(--ctrl)}
 .cat-misc{--cat:var(--misc)}
-
-/* ---------- движение ---------- */
 .dpad{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
   gap:10px;width:min(78vw,320px);margin:26px auto;aspect-ratio:1}
 .dp{border-radius:22px;border:1px solid var(--line);
   background:linear-gradient(160deg,#1d2433,#141922);color:var(--txt);
   font-size:24px;display:flex;align-items:center;justify-content:center;
-  font-family:inherit;transition:transform .08s}
+  font-family:inherit;transition:transform .08s, background .15s, color .15s}
 .dp.on{background:var(--acc);color:#08101f;border-color:var(--acc);transform:scale(.96)}
 .dp.up{grid-area:1/2}.dp.left{grid-area:2/1}.dp.right{grid-area:2/3}.dp.down{grid-area:3/2}
 .dp.center{grid-area:2/2;font-size:15px;font-weight:700;background:#2a1719;
   color:var(--err);border-color:#4a2a2e}
-
-/* ---------- панель вкладок ---------- */
+.dp.center:active{background:#3a1d22;transform:scale(.96)}
 .tabbar{position:fixed;left:0;right:0;bottom:0;display:flex;z-index:20;
   background:#121722;border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom)}
@@ -107,8 +100,6 @@ select.inp{padding-right:4px}
   font-size:19px;padding:9px 0 7px;display:flex;flex-direction:column;align-items:center;gap:3px}
 .tabbar button span{font-size:10.5px;letter-spacing:.03em}
 .tabbar button.active{color:var(--acc)}
-
-/* ---------- now playing ---------- */
 .nowplaying{position:fixed;left:12px;right:12px;
   bottom:calc(70px + env(safe-area-inset-bottom));z-index:19;
   display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;
@@ -118,8 +109,6 @@ select.inp{padding-right:4px}
 @keyframes pulse{50%{opacity:.25}}
 .np-stop{border:1px solid #4a2a2e;background:#2a1719;color:var(--err);
   border-radius:10px;padding:7px 14px;font-family:inherit;font-size:13px;font-weight:700}
-
-/* ---------- шторка ---------- */
 .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:30}
 .sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;background:#151b26;
   border-radius:20px 20px 0 0;padding:16px 14px calc(20px + env(safe-area-inset-bottom));
@@ -144,13 +133,11 @@ select.inp{padding-right:4px}
 </div>
 
 <main>
-  <!-- ================= ТАНЦЫ ================= -->
   <section class="view" id="view-dances">
     <h2>Танцы</h2>
     <div class="dance-grid" id="danceGrid"></div>
   </section>
 
-  <!-- ================= КОНСТРУКТОР ================= -->
   <section class="view" id="view-builder" hidden>
     <div class="builder-head">
       <h2>Мой танец</h2>
@@ -161,20 +148,19 @@ select.inp{padding-right:4px}
       </div>
     </div>
     <div class="program" id="programRoot"></div>
-    <p class="hint">Собирай скрипт из блоков. Переменные — латиницей (x, i, n). В выражениях можно писать <b>x + 1</b>, <b>i * 2</b>.</p>
+    <p class="hint">Углы <b>0–180</b>: для рук 0 — опущена, 180 — поднята; для поворота 90 — нейтраль. Переменные — латиницей (x, i, n). В выражениях можно писать <b>x + 1</b>, <b>i * 2</b>.</p>
   </section>
 
-  <!-- ================= ДВИЖЕНИЕ ================= -->
   <section class="view" id="view-drive" hidden>
     <h2>Движение</h2>
     <div class="dpad">
-      <button class="dp up"     data-dir="fwd">▲</button>
+      <button class="dp up"     data-dir="forward">▲</button>
       <button class="dp left"   data-dir="left">◀</button>
       <button class="dp center" data-dir="stop">СТОП</button>
       <button class="dp right"  data-dir="right">▶</button>
       <button class="dp down"   data-dir="back">▼</button>
     </div>
-    <p class="hint">Зажми кнопку — робот едет, отпусти — останавливается.</p>
+    <p class="hint">Нажми направление — робот едет, пока не нажмёшь это же направление ещё раз, другое направление или СТОП.</p>
   </section>
 </main>
 
@@ -200,23 +186,27 @@ select.inp{padding-right:4px}
 <script>
 "use strict";
 /* =========================================================
-   БИБИ — веб-интерфейс управления роботом (STM32 + сервер)
-   Протокол: GET /cmd?<params>
-     act=arm&side=right&angle=90     поднять руку
-     act=rot&side=left&angle=-45     повернуть руку
-     act=face&id=default|left|right|both|wink|happy|sad|angry
-     act=move&dir=fwd|back|left|right
-     act=stop
+   Протокол: GET /cmd/<command>[/<arg>]
+     /cmd/forward           /cmd/back
+     /cmd/left              /cmd/right
+     /cmd/stop              /cmd/ping
+     /cmd/leftarm/<0-180>   /cmd/rightarm/<0-180>
+     /cmd/leftrot/<0-180>   /cmd/rightrot/<0-180>
+     /cmd/face/<id>
+
+   Углы — АБСОЛЮТНЫЕ, 0..180, без отрицательных.
+   Для arm:  0 = рука опущена, 180 = поднята.
+   Для rot:  90 = нейтраль, 0/180 = крайние положения.
    ========================================================= */
 
 const $ = id => document.getElementById(id);
 
 /* ---------------- ТРАНСПОРТ ---------------- */
 let connTimer = null;
-async function send(params){
-  const qs = new URLSearchParams(params).toString();
+async function send(...tokens){
+  const path = 'cmd/' + tokens.map(t => encodeURIComponent(t)).join('/');
   try{
-    const res = await fetch('cmd?' + qs, {cache:'no-store'});
+    const res = await fetch(path, {cache:'no-store'});
     setStatus(res.ok);
     return res.ok;
   }catch(e){
@@ -239,7 +229,10 @@ const state = { running:false, stop:false };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const num = v => { const n = parseFloat(String(v).replace(',','.')); return isFinite(n) ? n : 0; };
 
-/* ---------------- БИБЛИОТЕКА ЭМОЦИЙ ---------------- */
+/* Прижимаем угол к 0..180 — единственное место, где определяется диапазон */
+const clampAngle = v => Math.max(0, Math.min(180, Math.round(num(v))));
+
+/* ---------------- ЭМОЦИИ ---------------- */
 const FACES = [
   {id:'default', name:'Обычное лицо'},
   {id:'left',    name:'Левый глаз закрыт'},
@@ -263,95 +256,83 @@ document.querySelectorAll('.tabbar button').forEach(btn=>{
                         ТАНЦЫ
    ========================================================= */
 const DANCES = [
-  {
-    id:'67', name:'67', emoji:'🔥', tag:'Reels',
-    seq:[
-      {t:'face', face:'default', d:200},
-      {t:'arm', side:'right', angle:110, d:380},
-      {t:'arm', side:'left',  angle:110, d:380},
-      {t:'rot', side:'right', angle:-45, d:260},
-      {t:'rot', side:'left',  angle:45,  d:260},
-      {t:'face', face:'wink', d:300},
-      {t:'arm', side:'right', angle:25, d:300},
-      {t:'arm', side:'left',  angle:25, d:300},
-      {t:'rot', side:'right', angle:60, d:260},
-      {t:'rot', side:'left',  angle:-60, d:260},
-      {t:'face', face:'both', d:350},
-      {t:'arm', side:'right', angle:125, d:400},
-      {t:'arm', side:'left',  angle:125, d:400},
-      {t:'face', face:'happy', d:350},
-      {t:'arm', side:'right', angle:0, d:300},
-      {t:'arm', side:'left',  angle:0, d:300},
-      {t:'face', face:'default', d:200}
-    ]
-  },
-  {
-    id:'mognu', name:'Могну', emoji:'💃', tag:'Reels',
-    seq:[
-      {t:'face', face:'happy', d:250},
-      {t:'arm', side:'right', angle:90, d:350},
-      {t:'rot', side:'right', angle:-60, d:300},
-      {t:'rot', side:'right', angle:60, d:300},
-      {t:'rot', side:'right', angle:-60, d:300},
-      {t:'arm', side:'right', angle:0, d:300},
-      {t:'arm', side:'left', angle:90, d:350},
-      {t:'rot', side:'left', angle:60, d:300},
-      {t:'rot', side:'left', angle:-60, d:300},
-      {t:'rot', side:'left', angle:60, d:300},
-      {t:'arm', side:'left', angle:0, d:300},
-      {t:'face', face:'wink', d:350},
-      {t:'arm', side:'right', angle:130, d:380},
-      {t:'arm', side:'left',  angle:130, d:380},
-      {t:'rot', side:'right', angle:-30, d:250},
-      {t:'rot', side:'left',  angle:30, d:250},
-      {t:'face', face:'both', d:400},
-      {t:'arm', side:'right', angle:0, d:300},
-      {t:'arm', side:'left',  angle:0, d:300},
-      {t:'face', face:'default', d:200}
-    ]
-  },
-  {
-    id:'wave', name:'Волна', emoji:'🌊', tag:'плавно',
-    seq:[
-      {t:'face', face:'default', d:200},
-      {t:'arm', side:'right', angle:120, d:400},
-      {t:'rot', side:'right', angle:-50, d:350},
-      {t:'rot', side:'right', angle:50, d:350},
-      {t:'rot', side:'right', angle:-50, d:350},
-      {t:'rot', side:'right', angle:50, d:350},
-      {t:'arm', side:'right', angle:0, d:350},
-      {t:'arm', side:'left', angle:120, d:400},
-      {t:'rot', side:'left', angle:50, d:350},
-      {t:'rot', side:'left', angle:-50, d:350},
-      {t:'rot', side:'left', angle:50, d:350},
-      {t:'rot', side:'left', angle:-50, d:350},
-      {t:'arm', side:'left', angle:0, d:350},
-      {t:'face', face:'happy', d:400}
-    ]
-  },
-  {
-    id:'robot', name:'Робот', emoji:'🤖', tag:'резко',
-    seq:[
-      {t:'face', face:'default', d:200},
-      {t:'arm', side:'right', angle:90, d:200},
-      {t:'arm', side:'left',  angle:90, d:200},
-      {t:'rot', side:'right', angle:-90, d:200},
-      {t:'rot', side:'left',  angle:90,  d:200},
-      {t:'arm', side:'right', angle:0, d:200},
-      {t:'arm', side:'left',  angle:0, d:200},
-      {t:'face', face:'both', d:200},
-      {t:'face', face:'default', d:200},
-      {t:'face', face:'both', d:200},
-      {t:'face', face:'wink', d:250},
-      {t:'arm', side:'right', angle:135, d:220},
-      {t:'arm', side:'left',  angle:135, d:220},
-      {t:'rot', side:'right', angle:90, d:220},
-      {t:'rot', side:'left',  angle:-90, d:220},
-      {t:'arm', side:'right', angle:0, d:220},
-      {t:'arm', side:'left',  angle:0, d:220},
-      {t:'face', face:'default', d:200}
-    ]
-  }
+  {id:'67', name:'67', emoji:'🔥', tag:'Reels', seq:[
+    {t:'face', face:'default', d:200},
+    {t:'arm', side:'right', angle:110, d:380},
+    {t:'arm', side:'left',  angle:110, d:380},
+    {t:'rot', side:'right', angle:45,  d:260},   /* было -45 */
+    {t:'rot', side:'left',  angle:135, d:260},   /* было  45 */
+    {t:'face', face:'wink', d:300},
+    {t:'arm', side:'right', angle:25, d:300},
+    {t:'arm', side:'left',  angle:25, d:300},
+    {t:'rot', side:'right', angle:150, d:260},   /* было  60 */
+    {t:'rot', side:'left',  angle:30,  d:260},   /* было -60 */
+    {t:'face', face:'both', d:350},
+    {t:'arm', side:'right', angle:125, d:400},
+    {t:'arm', side:'left',  angle:125, d:400},
+    {t:'face', face:'happy', d:350},
+    {t:'arm', side:'right', angle:0, d:300},
+    {t:'arm', side:'left',  angle:0, d:300},
+    {t:'face', face:'default', d:200}
+  ]},
+  {id:'mognu', name:'Могну', emoji:'💃', tag:'Reels', seq:[
+    {t:'face', face:'happy', d:250},
+    {t:'arm', side:'right', angle:90, d:350},
+    {t:'rot', side:'right', angle:30,  d:300},   /* -60 */
+    {t:'rot', side:'right', angle:150, d:300},   /*  60 */
+    {t:'rot', side:'right', angle:30,  d:300},   /* -60 */
+    {t:'arm', side:'right', angle:0, d:300},
+    {t:'arm', side:'left', angle:90, d:350},
+    {t:'rot', side:'left', angle:150, d:300},    /*  60 */
+    {t:'rot', side:'left', angle:30,  d:300},    /* -60 */
+    {t:'rot', side:'left', angle:150, d:300},    /*  60 */
+    {t:'arm', side:'left', angle:0, d:300},
+    {t:'face', face:'wink', d:350},
+    {t:'arm', side:'right', angle:130, d:380},
+    {t:'arm', side:'left',  angle:130, d:380},
+    {t:'rot', side:'right', angle:60,  d:250},   /* -30 */
+    {t:'rot', side:'left',  angle:120, d:250},   /*  30 */
+    {t:'face', face:'both', d:400},
+    {t:'arm', side:'right', angle:0, d:300},
+    {t:'arm', side:'left',  angle:0, d:300},
+    {t:'face', face:'default', d:200}
+  ]},
+  {id:'wave', name:'Волна', emoji:'🌊', tag:'плавно', seq:[
+    {t:'face', face:'default', d:200},
+    {t:'arm', side:'right', angle:120, d:400},
+    {t:'rot', side:'right', angle:40,  d:350},   /* -50 */
+    {t:'rot', side:'right', angle:140, d:350},   /*  50 */
+    {t:'rot', side:'right', angle:40,  d:350},
+    {t:'rot', side:'right', angle:140, d:350},
+    {t:'arm', side:'right', angle:0, d:350},
+    {t:'arm', side:'left', angle:120, d:400},
+    {t:'rot', side:'left', angle:140, d:350},    /*  50 */
+    {t:'rot', side:'left', angle:40,  d:350},    /* -50 */
+    {t:'rot', side:'left', angle:140, d:350},
+    {t:'rot', side:'left', angle:40,  d:350},
+    {t:'arm', side:'left', angle:0, d:350},
+    {t:'face', face:'happy', d:400}
+  ]},
+  {id:'robot', name:'Робот', emoji:'🤖', tag:'резко', seq:[
+    {t:'face', face:'default', d:200},
+    {t:'arm', side:'right', angle:90, d:200},
+    {t:'arm', side:'left',  angle:90, d:200},
+    {t:'rot', side:'right', angle:0,   d:200},   /* -90 */
+    {t:'rot', side:'left',  angle:180, d:200},   /*  90 */
+    {t:'arm', side:'right', angle:0, d:200},
+    {t:'arm', side:'left',  angle:0, d:200},
+    {t:'face', face:'both', d:200},
+    {t:'face', face:'default', d:200},
+    {t:'face', face:'both', d:200},
+    {t:'face', face:'wink', d:250},
+    {t:'arm', side:'right', angle:135, d:220},
+    {t:'arm', side:'left',  angle:135, d:220},
+    {t:'rot', side:'right', angle:180, d:220},   /*  90 */
+    {t:'rot', side:'left',  angle:0,   d:220},   /* -90 */
+    {t:'arm', side:'right', angle:0, d:220},
+    {t:'arm', side:'left',  angle:0, d:220},
+    {t:'face', face:'default', d:200}
+  ]}
 ];
 
 function buildDanceGrid(){
@@ -370,11 +351,11 @@ function buildDanceGrid(){
 
 async function execStep(s){
   switch(s.t){
-    case 'arm':  return send({act:'arm',  side:s.side, angle:Math.round(num(s.angle))});
-    case 'rot':  return send({act:'rot',  side:s.side, angle:Math.round(num(s.angle))});
-    case 'face': return send({act:'face', id:s.face});
-    case 'move': return send({act:'move', dir:s.dir});
-    case 'stop': return send({act:'stop'});
+    case 'arm':  return send(s.side + 'arm', clampAngle(s.angle));
+    case 'rot':  return send(s.side + 'rot', clampAngle(s.angle));
+    case 'face': return send('face', s.face);
+    case 'move': return send(s.dir);
+    case 'stop': return send('stop');
   }
 }
 
@@ -399,28 +380,23 @@ async function playDance(d){
 let program = [];
 let addTarget = null;
 
-/* ---- палитра блоков ---- */
 const PALETTE = [
   {title:'Движение', cat:'motion', items:[
     {type:'arm', label:'Поднять руку'},
     {type:'rot', label:'Повернуть руку'}
   ]},
-  {title:'Эмоции', cat:'emotion', items:[
-    {type:'face', label:'Эмоция'}
-  ]},
+  {title:'Эмоции', cat:'emotion', items:[{type:'face', label:'Эмоция'}]},
   {title:'Переменные', cat:'var', items:[
     {type:'setvar', label:'Задать переменную'},
     {type:'addvar', label:'Изменить переменную'}
   ]},
   {title:'Управление', cat:'ctrl', items:[
-    {type:'if',       label:'Если … то'},
-    {type:'for',      label:'Повторить N раз'},
-    {type:'while',    label:'Пока … делать'},
-    {type:'dowhile',  label:'Делать, пока …'}
+    {type:'if',      label:'Если … то'},
+    {type:'for',     label:'Повторить N раз'},
+    {type:'while',   label:'Пока … делать'},
+    {type:'dowhile', label:'Делать, пока …'}
   ]},
-  {title:'Прочее', cat:'misc', items:[
-    {type:'wait', label:'Ждать'}
-  ]}
+  {title:'Прочее', cat:'misc', items:[{type:'wait', label:'Ждать'}]}
 ];
 
 function createBlock(type){
@@ -438,7 +414,7 @@ function createBlock(type){
   }
 }
 
-/* ---- мелкие фабрики элементов ---- */
+/* ---- фабрики DOM ---- */
 function mkInput(value, cls, onChange, inputMode){
   const el = document.createElement('input');
   el.type = 'text';
@@ -451,6 +427,28 @@ function mkInput(value, cls, onChange, inputMode){
   el.addEventListener('focus', ()=> el.select());
   return el;
 }
+
+/* Специальный ввод угла: number, 0..180, с прижатием на blur */
+function mkAngle(value, onChange){
+  const el = document.createElement('input');
+  el.type = 'number';
+  el.min = '0';
+  el.max = '180';
+  el.step = '1';
+  el.className = 'inp num';
+  el.value = String(clampAngle(value));
+  el.inputMode = 'numeric';
+  el.autocomplete = 'off';
+  el.addEventListener('input', ()=> onChange(el.value));   // не клэмпим на лету
+  el.addEventListener('blur', ()=>{                          // прижимаем при потере фокуса
+    const v = clampAngle(el.value);
+    el.value = String(v);
+    onChange(String(v));
+  });
+  el.addEventListener('focus', ()=> el.select());
+  return el;
+}
+
 function mkSelect(options, value, onChange){
   const s = document.createElement('select');
   s.className = 'inp';
@@ -462,11 +460,7 @@ function mkSelect(options, value, onChange){
   s.addEventListener('change', ()=> onChange(s.value));
   return s;
 }
-function txt(t){
-  const s = document.createElement('span');
-  s.textContent = t;
-  return s;
-}
+function txt(t){ const s = document.createElement('span'); s.textContent = t; return s; }
 
 function sideSelect(b, key){
   return mkSelect([['right','правую'],['left','левую']], b[key], v=> b[key]=v);
@@ -491,7 +485,6 @@ function condEditor(b){
   return wrap;
 }
 
-/* ---- отрисовка одного блока ---- */
 function catOf(type){
   if(type==='arm'||type==='rot') return 'motion';
   if(type==='face') return 'emotion';
@@ -504,11 +497,11 @@ function buildLabel(el, b){
   switch(b.type){
     case 'arm':
       el.append(txt('Поднять руку'), sideSelect(b,'side'), txt('на'),
-                mkInput(b.angle,'num',v=>b.angle=v,'numeric'), txt('°'));
+                mkAngle(b.angle, v=> b.angle = v), txt('° (0=низ, 180=верх)'));
       break;
     case 'rot':
       el.append(txt('Повернуть руку'), sideSelect(b,'side'), txt('на'),
-                mkInput(b.angle,'num',v=>b.angle=v,'numeric'), txt('°'));
+                mkAngle(b.angle, v=> b.angle = v), txt('° (90=нейтраль)'));
       break;
     case 'face':
       el.append(txt('Эмоция'), faceSelect(b,'face'));
@@ -524,18 +517,10 @@ function buildLabel(el, b){
       el.append(txt('Изменить'), nameInput(b,'name'), txt('на'),
                 mkInput(b.value,'expr',v=>b.value=v,'text'));
       break;
-    case 'if':
-      el.append(txt('Если'), condEditor(b), txt('то'));
-      break;
-    case 'for':
-      el.append(txt('Повторить'), mkInput(b.times,'num',v=>b.times=v,'numeric'), txt('раз'));
-      break;
-    case 'while':
-      el.append(txt('Пока'), condEditor(b), txt('делать'));
-      break;
-    case 'dowhile':
-      el.append(txt('Делать, пока'), condEditor(b));
-      break;
+    case 'if':      el.append(txt('Если'), condEditor(b), txt('то')); break;
+    case 'for':     el.append(txt('Повторить'), mkInput(b.times,'num',v=>b.times=v,'numeric'), txt('раз')); break;
+    case 'while':   el.append(txt('Пока'), condEditor(b), txt('делать')); break;
+    case 'dowhile': el.append(txt('Делать, пока'), condEditor(b)); break;
   }
 }
 
@@ -560,24 +545,19 @@ function renderBlock(b, list, i){
   const wrap = document.createElement('div');
   const el = document.createElement('div');
   el.className = 'block cat-' + catOf(b.type);
-
   const head = document.createElement('div');
   head.className = 'block-head';
-
   const label = document.createElement('div');
   label.className = 'block-label';
   buildLabel(label, b);
   head.appendChild(label);
-
   const tools = document.createElement('div');
   tools.className = 'block-tools';
   tools.appendChild(iconBtn('↑', ()=> moveBlock(list, i, -1)));
   tools.appendChild(iconBtn('↓', ()=> moveBlock(list, i,  1)));
   tools.appendChild(iconBtn('✕', ()=> removeBlock(list, i), 'danger'));
   head.appendChild(tools);
-
   el.appendChild(head);
-
   if(b.body){
     const nested = document.createElement('div');
     nested.className = 'nested';
@@ -586,15 +566,13 @@ function renderBlock(b, list, i){
   }
   if(b.elseBody){
     const er = document.createElement('div');
-    er.className = 'else-row';
-    er.textContent = 'иначе';
+    er.className = 'else-row'; er.textContent = 'иначе';
     el.appendChild(er);
     const nested2 = document.createElement('div');
     nested2.className = 'nested';
     renderList(nested2, b.elseBody);
     el.appendChild(nested2);
   }
-
   wrap.appendChild(el);
   return wrap;
 }
@@ -605,39 +583,29 @@ function renderProgram(){
   renderList(root, program);
   saveProgram();
 }
-
 function moveBlock(list, i, dir){
   const j = i + dir;
   if(j < 0 || j >= list.length) return;
   const t = list[i]; list[i] = list[j]; list[j] = t;
   renderProgram();
 }
-function removeBlock(list, i){
-  list.splice(i, 1);
-  renderProgram();
-}
+function removeBlock(list, i){ list.splice(i, 1); renderProgram(); }
 
-/* ---- шторка палитры ---- */
 function openSheet(list, index){
   addTarget = {list, index};
   const c = $('sheetContent');
   c.innerHTML = '';
   PALETTE.forEach(group=>{
     const h = document.createElement('div');
-    h.className = 'pal-group';
-    h.textContent = group.title;
+    h.className = 'pal-group'; h.textContent = group.title;
     c.appendChild(h);
-
     const g = document.createElement('div');
     g.className = 'pal-grid';
     group.items.forEach(it=>{
       const b = document.createElement('button');
       b.className = 'pal-item cat-' + group.cat;
       b.textContent = it.label;
-      b.addEventListener('click', ()=>{
-        addBlockOfType(it.type);
-        closeSheet();
-      });
+      b.addEventListener('click', ()=>{ addBlockOfType(it.type); closeSheet(); });
       g.appendChild(b);
     });
     c.appendChild(g);
@@ -656,7 +624,6 @@ function addBlockOfType(type){
   renderProgram();
 }
 
-/* ---- сохранение ---- */
 function saveProgram(){
   try{ localStorage.setItem('bibi_program', JSON.stringify(program)); }catch(e){}
 }
@@ -682,9 +649,7 @@ function evalExpr(src, vars){
     const fn = new Function(...names, '"use strict"; return (' + s + ');');
     const r = Number(fn(...names.map(n => vars[n] ?? 0)));
     return isFinite(r) ? r : 0;
-  }catch(e){
-    return 0;
-  }
+  }catch(e){ return 0; }
 }
 function evalCond(c, vars){
   const l = evalExpr(c.left, vars);
@@ -711,53 +676,45 @@ async function execBlock(b, vars){
   if(state.stop) return;
   switch(b.type){
     case 'arm': {
-      const a = Math.round(num(b.angle));
-      await send({act:'arm', side:b.side, angle:a});
-      await sleep(Math.max(200, Math.abs(a) * 7));
+      const a = clampAngle(b.angle);
+      await send(b.side + 'arm', a);
+      await sleep(Math.max(250, a * 7));   // 0°=250мс, 180°≈1.5с
       break;
     }
     case 'rot': {
-      const a = Math.round(num(b.angle));
-      await send({act:'rot', side:b.side, angle:a});
-      await sleep(Math.max(180, Math.abs(a) * 6));
+      const a = clampAngle(b.angle);
+      await send(b.side + 'rot', a);
+      // нейтраль 90 — больший уход от неё = дольше
+      await sleep(Math.max(250, Math.abs(a - 90) * 7 + 250));
       break;
     }
     case 'face':
-      await send({act:'face', id:b.face});
+      await send('face', b.face);
       await sleep(250);
       break;
     case 'wait':
       await sleep(Math.max(0, Math.min(60000, num(b.ms))));
       break;
-    case 'setvar':
-      vars[b.name] = evalExpr(b.value, vars);
-      break;
-    case 'addvar':
-      vars[b.name] = (vars[b.name] ?? 0) + evalExpr(b.value, vars);
-      break;
+    case 'setvar': vars[b.name] = evalExpr(b.value, vars); break;
+    case 'addvar': vars[b.name] = (vars[b.name] ?? 0) + evalExpr(b.value, vars); break;
     case 'if':
       if(evalCond(b.cond, vars)) await execList(b.body, vars);
       else                        await execList(b.elseBody, vars);
       break;
     case 'for': {
       const n = Math.max(0, Math.min(1000, Math.floor(evalExpr(b.times, vars))));
-      for(let i = 0; i < n && !state.stop; i++){
-        await execList(b.body, vars);
-      }
+      for(let i = 0; i < n && !state.stop; i++) await execList(b.body, vars);
       break;
     }
     case 'while': {
       let guard = 0;
-      while(!state.stop && evalCond(b.cond, vars) && guard++ < 1000){
-        await execList(b.body, vars);
-      }
+      while(!state.stop && evalCond(b.cond, vars) && guard++ < 1000) await execList(b.body, vars);
       break;
     }
     case 'dowhile': {
       let guard = 0;
-      do{
-        await execList(b.body, vars);
-      }while(!state.stop && evalCond(b.cond, vars) && guard++ < 1000);
+      do{ await execList(b.body, vars); }
+      while(!state.stop && evalCond(b.cond, vars) && guard++ < 1000);
       break;
     }
   }
@@ -769,46 +726,44 @@ async function runProgram(){
   state.stop = false;
   showNowPlaying('Мой танец');
   const vars = {};
-  try{
-    await execList(program, vars);
-  }catch(e){
-    console.error(e);
-  }
+  try{ await execList(program, vars); }
+  catch(e){ console.error(e); }
   state.running = false;
   hideNowPlaying();
 }
 
 /* =========================================================
-                    ДВИЖЕНИЕ
+                    ДВИЖЕНИЕ (toggle)
    ========================================================= */
-let moveSafety = null;
+let activeDir = null;
 
-function startMove(dir){
-  clearTimeout(moveSafety);
-  send({act:'move', dir});
-  moveSafety = setTimeout(()=> send({act:'stop'}), 5000); // защита от «уехал»
+function updateDpad(){
+  document.querySelectorAll('.dp').forEach(b=>{
+    b.classList.toggle('on', b.dataset.dir === activeDir);
+  });
+}
+async function toggleMove(dir){
+  if(activeDir === dir){
+    activeDir = null; updateDpad();
+    await send('stop');
+    return;
+  }
+  const prev = activeDir;
+  activeDir = dir; updateDpad();
+  if(prev) await send('stop');
+  await send(dir);
 }
 function stopMove(){
-  clearTimeout(moveSafety);
-  send({act:'stop'});
+  activeDir = null;
+  updateDpad();
+  send('stop');
 }
-
 document.querySelectorAll('.dp').forEach(btn=>{
   const dir = btn.dataset.dir;
-  const start = e=>{
-    e.preventDefault();
-    btn.classList.add('on');
+  btn.addEventListener('click', ()=>{
     if(dir === 'stop') stopMove();
-    else startMove(dir);
-  };
-  const end = ()=>{
-    btn.classList.remove('on');
-    if(dir !== 'stop') stopMove();
-  };
-  btn.addEventListener('pointerdown', start);
-  btn.addEventListener('pointerup', end);
-  btn.addEventListener('pointercancel', end);
-  btn.addEventListener('pointerleave', end);
+    else toggleMove(dir);
+  });
   btn.addEventListener('contextmenu', e=>e.preventDefault());
 });
 
@@ -819,13 +774,11 @@ function showNowPlaying(name){
   $('nowPlaying').hidden = false;
   $('nowPlaying').querySelector('.np-name').textContent = name;
 }
-function hideNowPlaying(){
-  $('nowPlaying').hidden = true;
-}
+function hideNowPlaying(){ $('nowPlaying').hidden = true; }
 function stopAll(){
   state.stop = true;
   state.running = false;
-  send({act:'stop'});
+  stopMove();
   hideNowPlaying();
 }
 
@@ -847,7 +800,8 @@ $('programRoot').addEventListener('input', saveProgram);
 buildDanceGrid();
 loadProgram();
 renderProgram();
-send({act:'ping'});   // проверка связи при старте
+updateDpad();
+send('ping');
 </script>
 </body>
 </html>
