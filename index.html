@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0e1117">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Биби</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0e1117;--card:#161b24;--card2:#1c2330;--line:#2a3242;
+  --txt:#e9eef7;--dim:#8b96a8;--acc:#4f8cff;
+  --ok:#3ddc97;--err:#ff5c5c;
+  --motion:#3b82f6;--emotion:#ec4899;--var:#f59e0b;--ctrl:#22c55e;--misc:#64748b;
+}
+html,body{margin:0;height:100%;overflow:hidden}
+body{
+  background:var(--bg);color:var(--txt);
+  font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;
+  font-size:15px;display:flex;flex-direction:column;
+  padding-top:env(safe-area-inset-top);
+  -webkit-user-select:none;user-select:none;
+}
+.topbar{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;
+  padding:12px 16px;border-bottom:1px solid var(--line);background:#121722}
+.logo{font-weight:700;font-size:17px}
+.status{font-size:12px;color:var(--dim)}
+.status.ok{color:var(--ok)}
+.status.err{color:var(--err)}
+main{flex:1 1 auto;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 104px}
+h2{font-size:13px;text-transform:uppercase;letter-spacing:.09em;color:var(--dim);margin:0 0 10px;font-weight:600}
+
+/* ---------- танцы ---------- */
+.dance-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.dance-card{display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  padding:15px 14px;border-radius:18px;border:1px solid var(--line);
+  background:linear-gradient(160deg,#1d2433,#151a23);color:var(--txt);
+  font-family:inherit;text-align:left;transition:transform .1s}
+.dance-card:active{transform:scale(.97)}
+.dance-card .emoji{font-size:26px;line-height:1.2}
+.dance-card .name{font-size:17px;font-weight:700}
+.dance-card .tag{font-size:10.5px;color:var(--dim);text-transform:uppercase;letter-spacing:.07em}
+
+/* ---------- конструктор ---------- */
+.builder-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.builder-head h2{margin:0}
+.btn{border:1px solid var(--line);background:var(--card2);color:var(--txt);
+  font-family:inherit;font-size:13px;padding:8px 12px;border-radius:11px}
+.btn:active{transform:scale(.96)}
+.btn.primary{background:var(--acc);border-color:var(--acc);color:#08101f;font-weight:700}
+.btn.danger{color:var(--err);border-color:#3a2430}
+
+.program{min-height:80px;padding-bottom:6px}
+.block{border:1px solid var(--line);border-left:4px solid var(--cat,var(--misc));
+  background:var(--card2);border-radius:12px;padding:7px 8px;margin-bottom:7px}
+.block-head{display:flex;align-items:center;gap:6px}
+.block-label{flex:1;display:flex;flex-wrap:wrap;align-items:center;gap:5px;
+  font-size:13.5px;line-height:1.55;min-width:0}
+.block-tools{display:flex;gap:3px;flex:0 0 auto}
+.icon-btn{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);
+  background:#0e1420;color:var(--dim);font-size:12px;line-height:1;
+  display:flex;align-items:center;justify-content:center;padding:0;font-family:inherit}
+.icon-btn.danger{color:var(--err)}
+.nested{margin:7px 0 0 4px;padding-left:9px;border-left:2px dashed #2f3a4d}
+.else-row{font-size:11.5px;color:var(--dim);margin:8px 0 0 4px;padding-left:9px;
+  border-left:2px dashed #2f3a4d;line-height:1}
+.add-btn{width:100%;margin:2px 0 8px;padding:9px;border-radius:11px;
+  border:1px dashed #33405a;background:transparent;color:var(--dim);
+  font-family:inherit;font-size:12.5px}
+.add-btn:active{background:#161d29}
+
+.inp{background:#0b0f16;border:1px solid var(--line);color:var(--txt);
+  border-radius:8px;padding:4px 6px;font-size:13px;font-family:inherit;
+  min-width:0;-webkit-appearance:none;appearance:none}
+.inp.num{width:54px;text-align:center}
+.inp.expr{width:64px;text-align:center}
+.inp.name{width:62px;text-align:center;color:var(--var)}
+select.inp{padding-right:4px}
+.cond{display:inline-flex;gap:4px;align-items:center}
+.hint{font-size:11.5px;color:var(--dim);line-height:1.5;margin:10px 2px 0}
+
+.cat-motion{--cat:var(--motion)}
+.cat-emotion{--cat:var(--emotion)}
+.cat-var{--cat:var(--var)}
+.cat-ctrl{--cat:var(--ctrl)}
+.cat-misc{--cat:var(--misc)}
+
+/* ---------- движение ---------- */
+.dpad{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);
+  gap:10px;width:min(78vw,320px);margin:26px auto;aspect-ratio:1}
+.dp{border-radius:22px;border:1px solid var(--line);
+  background:linear-gradient(160deg,#1d2433,#141922);color:var(--txt);
+  font-size:24px;display:flex;align-items:center;justify-content:center;
+  font-family:inherit;transition:transform .08s}
+.dp.on{background:var(--acc);color:#08101f;border-color:var(--acc);transform:scale(.96)}
+.dp.up{grid-area:1/2}.dp.left{grid-area:2/1}.dp.right{grid-area:2/3}.dp.down{grid-area:3/2}
+.dp.center{grid-area:2/2;font-size:15px;font-weight:700;background:#2a1719;
+  color:var(--err);border-color:#4a2a2e}
+
+/* ---------- панель вкладок ---------- */
+.tabbar{position:fixed;left:0;right:0;bottom:0;display:flex;z-index:20;
+  background:#121722;border-top:1px solid var(--line);
+  padding-bottom:env(safe-area-inset-bottom)}
+.tabbar button{flex:1;background:none;border:0;color:var(--dim);font-family:inherit;
+  font-size:19px;padding:9px 0 7px;display:flex;flex-direction:column;align-items:center;gap:3px}
+.tabbar button span{font-size:10.5px;letter-spacing:.03em}
+.tabbar button.active{color:var(--acc)}
+
+/* ---------- now playing ---------- */
+.nowplaying{position:fixed;left:12px;right:12px;
+  bottom:calc(70px + env(safe-area-inset-bottom));z-index:19;
+  display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;
+  background:#1b2333;border:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.55)}
+.np-name{flex:1;font-size:14px;font-weight:600}
+.np-dot{width:9px;height:9px;border-radius:50%;background:var(--ok);animation:pulse 1s infinite}
+@keyframes pulse{50%{opacity:.25}}
+.np-stop{border:1px solid #4a2a2e;background:#2a1719;color:var(--err);
+  border-radius:10px;padding:7px 14px;font-family:inherit;font-size:13px;font-weight:700}
+
+/* ---------- шторка ---------- */
+.backdrop{position:fixed;inset:0;background:rgba(0,0,0,.62);z-index:30}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:31;background:#151b26;
+  border-radius:20px 20px 0 0;padding:16px 14px calc(20px + env(safe-area-inset-bottom));
+  max-height:76vh;overflow-y:auto;box-shadow:0 -10px 40px rgba(0,0,0,.6)}
+.sheet-title{font-weight:700;margin-bottom:4px}
+.sheet-sub{font-size:12px;color:var(--dim);margin-bottom:8px}
+.pal-group{font-size:10.5px;text-transform:uppercase;letter-spacing:.09em;
+  color:var(--dim);margin:13px 0 6px}
+.pal-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.pal-item{padding:11px 10px;border-radius:11px;background:var(--card2);
+  border:1px solid var(--line);border-left:4px solid var(--cat,var(--misc));
+  color:var(--txt);font-family:inherit;font-size:13px;text-align:left}
+.pal-item:active{background:#25303f}
+[hidden]{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="logo">🤖 Биби</div>
+  <div class="status" id="status">нет связи</div>
+</div>
+
+<main>
+  <!-- ================= ТАНЦЫ ================= -->
+  <section class="view" id="view-dances">
+    <h2>Танцы</h2>
+    <div class="dance-grid" id="danceGrid"></div>
+  </section>
+
+  <!-- ================= КОНСТРУКТОР ================= -->
+  <section class="view" id="view-builder" hidden>
+    <div class="builder-head">
+      <h2>Мой танец</h2>
+      <div style="display:flex;gap:6px">
+        <button class="btn primary" id="btnRun">▶</button>
+        <button class="btn danger" id="btnStop">■</button>
+        <button class="btn" id="btnClear">✕</button>
+      </div>
+    </div>
+    <div class="program" id="programRoot"></div>
+    <p class="hint">Собирай скрипт из блоков. Переменные — латиницей (x, i, n). В выражениях можно писать <b>x + 1</b>, <b>i * 2</b>.</p>
+  </section>
+
+  <!-- ================= ДВИЖЕНИЕ ================= -->
+  <section class="view" id="view-drive" hidden>
+    <h2>Движение</h2>
+    <div class="dpad">
+      <button class="dp up"     data-dir="fwd">▲</button>
+      <button class="dp left"   data-dir="left">◀</button>
+      <button class="dp center" data-dir="stop">СТОП</button>
+      <button class="dp right"  data-dir="right">▶</button>
+      <button class="dp down"   data-dir="back">▼</button>
+    </div>
+    <p class="hint">Зажми кнопку — робот едет, отпусти — останавливается.</p>
+  </section>
+</main>
+
+<div class="nowplaying" id="nowPlaying" hidden>
+  <div class="np-dot"></div>
+  <div class="np-name">—</div>
+  <button class="np-stop" id="npStop">СТОП</button>
+</div>
+
+<nav class="tabbar">
+  <button data-view="dances" class="active">🎵<span>Танцы</span></button>
+  <button data-view="builder">🧩<span>Конструктор</span></button>
+  <button data-view="drive">🕹<span>Движение</span></button>
+</nav>
+
+<div class="backdrop" id="backdrop" hidden></div>
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-title">Добавить блок</div>
+  <div class="sheet-sub">Куда добавляем — там и появится</div>
+  <div id="sheetContent"></div>
+</div>
+
+<script>
+"use strict";
+/* =========================================================
+   БИБИ — веб-интерфейс управления роботом (STM32 + сервер)
+   Протокол: GET /cmd?<params>
+     act=arm&side=right&angle=90     поднять руку
+     act=rot&side=left&angle=-45     повернуть руку
+     act=face&id=default|left|right|both|wink|happy|sad|angry
+     act=move&dir=fwd|back|left|right
+     act=stop
+   ========================================================= */
+
+const $ = id => document.getElementById(id);
+
+/* ---------------- ТРАНСПОРТ ---------------- */
+let connTimer = null;
+async function send(params){
+  const qs = new URLSearchParams(params).toString();
+  try{
+    const res = await fetch('cmd?' + qs, {cache:'no-store'});
+    setStatus(res.ok);
+    return res.ok;
+  }catch(e){
+    setStatus(false);
+    return false;
+  }
+}
+function setStatus(ok){
+  const el = $('status');
+  el.textContent = ok ? '● на связи' : '● нет связи';
+  el.className = 'status ' + (ok ? 'ok' : 'err');
+  clearTimeout(connTimer);
+  if(ok) connTimer = setTimeout(()=>{
+    el.textContent='● на связи'; el.className='status ok';
+  }, 4000);
+}
+
+/* ---------------- ОБЩЕЕ СОСТОЯНИЕ ---------------- */
+const state = { running:false, stop:false };
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const num = v => { const n = parseFloat(String(v).replace(',','.')); return isFinite(n) ? n : 0; };
+
+/* ---------------- БИБЛИОТЕКА ЭМОЦИЙ ---------------- */
+const FACES = [
+  {id:'default', name:'Обычное лицо'},
+  {id:'left',    name:'Левый глаз закрыт'},
+  {id:'right',   name:'Правый глаз закрыт'},
+  {id:'both',    name:'Оба глаза закрыты'},
+  {id:'wink',    name:'Подмигивание'},
+  {id:'happy',   name:'Улыбка'},
+  {id:'sad',     name:'Грусть'},
+  {id:'angry',   name:'Злость'}
+];
+
+/* ---------------- ВКЛАДКИ ---------------- */
+document.querySelectorAll('.tabbar button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.view').forEach(v => v.hidden = (v.id !== 'view-' + btn.dataset.view));
+    document.querySelectorAll('.tabbar button').forEach(b => b.classList.toggle('active', b === btn));
+  });
+});
+
+/* =========================================================
+                        ТАНЦЫ
+   ========================================================= */
+const DANCES = [
+  {
+    id:'67', name:'67', emoji:'🔥', tag:'Reels',
+    seq:[
+      {t:'face', face:'default', d:200},
+      {t:'arm', side:'right', angle:110, d:380},
+      {t:'arm', side:'left',  angle:110, d:380},
+      {t:'rot', side:'right', angle:-45, d:260},
+      {t:'rot', side:'left',  angle:45,  d:260},
+      {t:'face', face:'wink', d:300},
+      {t:'arm', side:'right', angle:25, d:300},
+      {t:'arm', side:'left',  angle:25, d:300},
+      {t:'rot', side:'right', angle:60, d:260},
+      {t:'rot', side:'left',  angle:-60, d:260},
+      {t:'face', face:'both', d:350},
+      {t:'arm', side:'right', angle:125, d:400},
+      {t:'arm', side:'left',  angle:125, d:400},
+      {t:'face', face:'happy', d:350},
+      {t:'arm', side:'right', angle:0, d:300},
+      {t:'arm', side:'left',  angle:0, d:300},
+      {t:'face', face:'default', d:200}
+    ]
+  },
+  {
+    id:'mognu', name:'Могну', emoji:'💃', tag:'Reels',
+    seq:[
+      {t:'face', face:'happy', d:250},
+      {t:'arm', side:'right', angle:90, d:350},
+      {t:'rot', side:'right', angle:-60, d:300},
+      {t:'rot', side:'right', angle:60, d:300},
+      {t:'rot', side:'right', angle:-60, d:300},
+      {t:'arm', side:'right', angle:0, d:300},
+      {t:'arm', side:'left', angle:90, d:350},
+      {t:'rot', side:'left', angle:60, d:300},
+      {t:'rot', side:'left', angle:-60, d:300},
+      {t:'rot', side:'left', angle:60, d:300},
+      {t:'arm', side:'left', angle:0, d:300},
+      {t:'face', face:'wink', d:350},
+      {t:'arm', side:'right', angle:130, d:380},
+      {t:'arm', side:'left',  angle:130, d:380},
+      {t:'rot', side:'right', angle:-30, d:250},
+      {t:'rot', side:'left',  angle:30, d:250},
+      {t:'face', face:'both', d:400},
+      {t:'arm', side:'right', angle:0, d:300},
+      {t:'arm', side:'left',  angle:0, d:300},
+      {t:'face', face:'default', d:200}
+    ]
+  },
+  {
+    id:'wave', name:'Волна', emoji:'🌊', tag:'плавно',
+    seq:[
+      {t:'face', face:'default', d:200},
+      {t:'arm', side:'right', angle:120, d:400},
+      {t:'rot', side:'right', angle:-50, d:350},
+      {t:'rot', side:'right', angle:50, d:350},
+      {t:'rot', side:'right', angle:-50, d:350},
+      {t:'rot', side:'right', angle:50, d:350},
+      {t:'arm', side:'right', angle:0, d:350},
+      {t:'arm', side:'left', angle:120, d:400},
+      {t:'rot', side:'left', angle:50, d:350},
+      {t:'rot', side:'left', angle:-50, d:350},
+      {t:'rot', side:'left', angle:50, d:350},
+      {t:'rot', side:'left', angle:-50, d:350},
+      {t:'arm', side:'left', angle:0, d:350},
+      {t:'face', face:'happy', d:400}
+    ]
+  },
+  {
+    id:'robot', name:'Робот', emoji:'🤖', tag:'резко',
+    seq:[
+      {t:'face', face:'default', d:200},
+      {t:'arm', side:'right', angle:90, d:200},
+      {t:'arm', side:'left',  angle:90, d:200},
+      {t:'rot', side:'right', angle:-90, d:200},
+      {t:'rot', side:'left',  angle:90,  d:200},
+      {t:'arm', side:'right', angle:0, d:200},
+      {t:'arm', side:'left',  angle:0, d:200},
+      {t:'face', face:'both', d:200},
+      {t:'face', face:'default', d:200},
+      {t:'face', face:'both', d:200},
+      {t:'face', face:'wink', d:250},
+      {t:'arm', side:'right', angle:135, d:220},
+      {t:'arm', side:'left',  angle:135, d:220},
+      {t:'rot', side:'right', angle:90, d:220},
+      {t:'rot', side:'left',  angle:-90, d:220},
+      {t:'arm', side:'right', angle:0, d:220},
+      {t:'arm', side:'left',  angle:0, d:220},
+      {t:'face', face:'default', d:200}
+    ]
+  }
+];
+
+function buildDanceGrid(){
+  const grid = $('danceGrid');
+  grid.innerHTML = '';
+  DANCES.forEach(d=>{
+    const b = document.createElement('button');
+    b.className = 'dance-card';
+    b.innerHTML = `<span class="emoji">${d.emoji}</span>
+                   <span class="name">${d.name}</span>
+                   <span class="tag">${d.tag}</span>`;
+    b.addEventListener('click', ()=> playDance(d));
+    grid.appendChild(b);
+  });
+}
+
+async function execStep(s){
+  switch(s.t){
+    case 'arm':  return send({act:'arm',  side:s.side, angle:Math.round(num(s.angle))});
+    case 'rot':  return send({act:'rot',  side:s.side, angle:Math.round(num(s.angle))});
+    case 'face': return send({act:'face', id:s.face});
+    case 'move': return send({act:'move', dir:s.dir});
+    case 'stop': return send({act:'stop'});
+  }
+}
+
+async function playDance(d){
+  if(state.running) stopAll();
+  await sleep(120);
+  state.running = true;
+  state.stop = false;
+  showNowPlaying(d.name);
+  for(const s of d.seq){
+    if(state.stop) break;
+    await execStep(s);
+    await sleep(s.d ?? 250);
+  }
+  state.running = false;
+  hideNowPlaying();
+}
+
+/* =========================================================
+                     КОНСТРУКТОР
+   ========================================================= */
+let program = [];
+let addTarget = null;
+
+/* ---- палитра блоков ---- */
+const PALETTE = [
+  {title:'Движение', cat:'motion', items:[
+    {type:'arm', label:'Поднять руку'},
+    {type:'rot', label:'Повернуть руку'}
+  ]},
+  {title:'Эмоции', cat:'emotion', items:[
+    {type:'face', label:'Эмоция'}
+  ]},
+  {title:'Переменные', cat:'var', items:[
+    {type:'setvar', label:'Задать переменную'},
+    {type:'addvar', label:'Изменить переменную'}
+  ]},
+  {title:'Управление', cat:'ctrl', items:[
+    {type:'if',       label:'Если … то'},
+    {type:'for',      label:'Повторить N раз'},
+    {type:'while',    label:'Пока … делать'},
+    {type:'dowhile',  label:'Делать, пока …'}
+  ]},
+  {title:'Прочее', cat:'misc', items:[
+    {type:'wait', label:'Ждать'}
+  ]}
+];
+
+function createBlock(type){
+  switch(type){
+    case 'arm':     return {type, side:'right', angle:'90'};
+    case 'rot':     return {type, side:'right', angle:'90'};
+    case 'face':    return {type, face:'default'};
+    case 'wait':    return {type, ms:'500'};
+    case 'setvar':  return {type, name:'x', value:'0'};
+    case 'addvar':  return {type, name:'x', value:'1'};
+    case 'if':      return {type, cond:{left:'x', op:'>', right:'0'}, body:[], elseBody:[]};
+    case 'for':     return {type, times:'3', body:[]};
+    case 'while':   return {type, cond:{left:'x', op:'<', right:'3'}, body:[]};
+    case 'dowhile': return {type, cond:{left:'x', op:'<', right:'3'}, body:[]};
+  }
+}
+
+/* ---- мелкие фабрики элементов ---- */
+function mkInput(value, cls, onChange, inputMode){
+  const el = document.createElement('input');
+  el.type = 'text';
+  el.className = 'inp ' + cls;
+  el.value = value;
+  if(inputMode) el.inputMode = inputMode;
+  el.autocomplete = 'off';
+  el.spellcheck = false;
+  el.addEventListener('input', ()=> onChange(el.value));
+  el.addEventListener('focus', ()=> el.select());
+  return el;
+}
+function mkSelect(options, value, onChange){
+  const s = document.createElement('select');
+  s.className = 'inp';
+  options.forEach(([v,n])=>{
+    const o = document.createElement('option');
+    o.value = v; o.textContent = n; s.appendChild(o);
+  });
+  s.value = value;
+  s.addEventListener('change', ()=> onChange(s.value));
+  return s;
+}
+function txt(t){
+  const s = document.createElement('span');
+  s.textContent = t;
+  return s;
+}
+
+function sideSelect(b, key){
+  return mkSelect([['right','правую'],['left','левую']], b[key], v=> b[key]=v);
+}
+function faceSelect(b, key){
+  return mkSelect(FACES.map(f=>[f.id, f.name]), b[key], v=> b[key]=v);
+}
+function nameInput(b, key){
+  return mkInput(b[key], 'name', v=>{
+    b[key] = v.replace(/[^A-Za-z0-9_]/g,'').replace(/^[0-9]/,'');
+  }, 'text');
+}
+function condEditor(b){
+  const wrap = document.createElement('span');
+  wrap.className = 'cond';
+  wrap.appendChild(mkInput(b.cond.left, 'expr', v=> b.cond.left = v, 'text'));
+  wrap.appendChild(mkSelect(
+    [['==','='],['!=','≠'],['>','>'],['<','<'],['>=','≥'],['<=','≤']],
+    b.cond.op, v=> b.cond.op = v
+  ));
+  wrap.appendChild(mkInput(b.cond.right, 'expr', v=> b.cond.right = v, 'text'));
+  return wrap;
+}
+
+/* ---- отрисовка одного блока ---- */
+function catOf(type){
+  if(type==='arm'||type==='rot') return 'motion';
+  if(type==='face') return 'emotion';
+  if(type==='setvar'||type==='addvar') return 'var';
+  if(type==='if'||type==='for'||type==='while'||type==='dowhile') return 'ctrl';
+  return 'misc';
+}
+
+function buildLabel(el, b){
+  switch(b.type){
+    case 'arm':
+      el.append(txt('Поднять руку'), sideSelect(b,'side'), txt('на'),
+                mkInput(b.angle,'num',v=>b.angle=v,'numeric'), txt('°'));
+      break;
+    case 'rot':
+      el.append(txt('Повернуть руку'), sideSelect(b,'side'), txt('на'),
+                mkInput(b.angle,'num',v=>b.angle=v,'numeric'), txt('°'));
+      break;
+    case 'face':
+      el.append(txt('Эмоция'), faceSelect(b,'face'));
+      break;
+    case 'wait':
+      el.append(txt('Ждать'), mkInput(b.ms,'num',v=>b.ms=v,'numeric'), txt('мс'));
+      break;
+    case 'setvar':
+      el.append(txt('Задать'), nameInput(b,'name'), txt('='),
+                mkInput(b.value,'expr',v=>b.value=v,'text'));
+      break;
+    case 'addvar':
+      el.append(txt('Изменить'), nameInput(b,'name'), txt('на'),
+                mkInput(b.value,'expr',v=>b.value=v,'text'));
+      break;
+    case 'if':
+      el.append(txt('Если'), condEditor(b), txt('то'));
+      break;
+    case 'for':
+      el.append(txt('Повторить'), mkInput(b.times,'num',v=>b.times=v,'numeric'), txt('раз'));
+      break;
+    case 'while':
+      el.append(txt('Пока'), condEditor(b), txt('делать'));
+      break;
+    case 'dowhile':
+      el.append(txt('Делать, пока'), condEditor(b));
+      break;
+  }
+}
+
+function iconBtn(label, onClick, extra){
+  const b = document.createElement('button');
+  b.className = 'icon-btn' + (extra ? ' ' + extra : '');
+  b.textContent = label;
+  b.addEventListener('click', onClick);
+  return b;
+}
+
+function renderList(parent, list){
+  list.forEach((b, i)=> parent.appendChild(renderBlock(b, list, i)));
+  const add = document.createElement('button');
+  add.className = 'add-btn';
+  add.textContent = '+ блок';
+  add.addEventListener('click', ()=> openSheet(list, list.length));
+  parent.appendChild(add);
+}
+
+function renderBlock(b, list, i){
+  const wrap = document.createElement('div');
+  const el = document.createElement('div');
+  el.className = 'block cat-' + catOf(b.type);
+
+  const head = document.createElement('div');
+  head.className = 'block-head';
+
+  const label = document.createElement('div');
+  label.className = 'block-label';
+  buildLabel(label, b);
+  head.appendChild(label);
+
+  const tools = document.createElement('div');
+  tools.className = 'block-tools';
+  tools.appendChild(iconBtn('↑', ()=> moveBlock(list, i, -1)));
+  tools.appendChild(iconBtn('↓', ()=> moveBlock(list, i,  1)));
+  tools.appendChild(iconBtn('✕', ()=> removeBlock(list, i), 'danger'));
+  head.appendChild(tools);
+
+  el.appendChild(head);
+
+  if(b.body){
+    const nested = document.createElement('div');
+    nested.className = 'nested';
+    renderList(nested, b.body);
+    el.appendChild(nested);
+  }
+  if(b.elseBody){
+    const er = document.createElement('div');
+    er.className = 'else-row';
+    er.textContent = 'иначе';
+    el.appendChild(er);
+    const nested2 = document.createElement('div');
+    nested2.className = 'nested';
+    renderList(nested2, b.elseBody);
+    el.appendChild(nested2);
+  }
+
+  wrap.appendChild(el);
+  return wrap;
+}
+
+function renderProgram(){
+  const root = $('programRoot');
+  root.innerHTML = '';
+  renderList(root, program);
+  saveProgram();
+}
+
+function moveBlock(list, i, dir){
+  const j = i + dir;
+  if(j < 0 || j >= list.length) return;
+  const t = list[i]; list[i] = list[j]; list[j] = t;
+  renderProgram();
+}
+function removeBlock(list, i){
+  list.splice(i, 1);
+  renderProgram();
+}
+
+/* ---- шторка палитры ---- */
+function openSheet(list, index){
+  addTarget = {list, index};
+  const c = $('sheetContent');
+  c.innerHTML = '';
+  PALETTE.forEach(group=>{
+    const h = document.createElement('div');
+    h.className = 'pal-group';
+    h.textContent = group.title;
+    c.appendChild(h);
+
+    const g = document.createElement('div');
+    g.className = 'pal-grid';
+    group.items.forEach(it=>{
+      const b = document.createElement('button');
+      b.className = 'pal-item cat-' + group.cat;
+      b.textContent = it.label;
+      b.addEventListener('click', ()=>{
+        addBlockOfType(it.type);
+        closeSheet();
+      });
+      g.appendChild(b);
+    });
+    c.appendChild(g);
+  });
+  $('sheet').hidden = false;
+  $('backdrop').hidden = false;
+}
+function closeSheet(){
+  $('sheet').hidden = true;
+  $('backdrop').hidden = true;
+  addTarget = null;
+}
+function addBlockOfType(type){
+  if(!addTarget) return;
+  addTarget.list.splice(addTarget.index, 0, createBlock(type));
+  renderProgram();
+}
+
+/* ---- сохранение ---- */
+function saveProgram(){
+  try{ localStorage.setItem('bibi_program', JSON.stringify(program)); }catch(e){}
+}
+function loadProgram(){
+  try{
+    const raw = localStorage.getItem('bibi_program');
+    if(raw){
+      const p = JSON.parse(raw);
+      if(Array.isArray(p)) program = p;
+    }
+  }catch(e){}
+}
+
+/* =========================================================
+                    ИНТЕРПРЕТАТОР
+   ========================================================= */
+function evalExpr(src, vars){
+  const s = String(src ?? '0').trim();
+  if(s === '') return 0;
+  if(/^-?\d+(\.\d+)?$/.test(s)) return parseFloat(s);
+  try{
+    const names = Object.keys(vars).filter(n=>/^[A-Za-z_]\w*$/.test(n));
+    const fn = new Function(...names, '"use strict"; return (' + s + ');');
+    const r = Number(fn(...names.map(n => vars[n] ?? 0)));
+    return isFinite(r) ? r : 0;
+  }catch(e){
+    return 0;
+  }
+}
+function evalCond(c, vars){
+  const l = evalExpr(c.left, vars);
+  const r = evalExpr(c.right, vars);
+  switch(c.op){
+    case '==': return l == r;
+    case '!=': return l != r;
+    case '>' : return l >  r;
+    case '<' : return l <  r;
+    case '>=': return l >= r;
+    case '<=': return l <= r;
+  }
+  return false;
+}
+
+async function execList(list, vars){
+  for(const b of list){
+    if(state.stop) return;
+    await execBlock(b, vars);
+  }
+}
+
+async function execBlock(b, vars){
+  if(state.stop) return;
+  switch(b.type){
+    case 'arm': {
+      const a = Math.round(num(b.angle));
+      await send({act:'arm', side:b.side, angle:a});
+      await sleep(Math.max(200, Math.abs(a) * 7));
+      break;
+    }
+    case 'rot': {
+      const a = Math.round(num(b.angle));
+      await send({act:'rot', side:b.side, angle:a});
+      await sleep(Math.max(180, Math.abs(a) * 6));
+      break;
+    }
+    case 'face':
+      await send({act:'face', id:b.face});
+      await sleep(250);
+      break;
+    case 'wait':
+      await sleep(Math.max(0, Math.min(60000, num(b.ms))));
+      break;
+    case 'setvar':
+      vars[b.name] = evalExpr(b.value, vars);
+      break;
+    case 'addvar':
+      vars[b.name] = (vars[b.name] ?? 0) + evalExpr(b.value, vars);
+      break;
+    case 'if':
+      if(evalCond(b.cond, vars)) await execList(b.body, vars);
+      else                        await execList(b.elseBody, vars);
+      break;
+    case 'for': {
+      const n = Math.max(0, Math.min(1000, Math.floor(evalExpr(b.times, vars))));
+      for(let i = 0; i < n && !state.stop; i++){
+        await execList(b.body, vars);
+      }
+      break;
+    }
+    case 'while': {
+      let guard = 0;
+      while(!state.stop && evalCond(b.cond, vars) && guard++ < 1000){
+        await execList(b.body, vars);
+      }
+      break;
+    }
+    case 'dowhile': {
+      let guard = 0;
+      do{
+        await execList(b.body, vars);
+      }while(!state.stop && evalCond(b.cond, vars) && guard++ < 1000);
+      break;
+    }
+  }
+}
+
+async function runProgram(){
+  if(state.running) return;
+  state.running = true;
+  state.stop = false;
+  showNowPlaying('Мой танец');
+  const vars = {};
+  try{
+    await execList(program, vars);
+  }catch(e){
+    console.error(e);
+  }
+  state.running = false;
+  hideNowPlaying();
+}
+
+/* =========================================================
+                    ДВИЖЕНИЕ
+   ========================================================= */
+let moveSafety = null;
+
+function startMove(dir){
+  clearTimeout(moveSafety);
+  send({act:'move', dir});
+  moveSafety = setTimeout(()=> send({act:'stop'}), 5000); // защита от «уехал»
+}
+function stopMove(){
+  clearTimeout(moveSafety);
+  send({act:'stop'});
+}
+
+document.querySelectorAll('.dp').forEach(btn=>{
+  const dir = btn.dataset.dir;
+  const start = e=>{
+    e.preventDefault();
+    btn.classList.add('on');
+    if(dir === 'stop') stopMove();
+    else startMove(dir);
+  };
+  const end = ()=>{
+    btn.classList.remove('on');
+    if(dir !== 'stop') stopMove();
+  };
+  btn.addEventListener('pointerdown', start);
+  btn.addEventListener('pointerup', end);
+  btn.addEventListener('pointercancel', end);
+  btn.addEventListener('pointerleave', end);
+  btn.addEventListener('contextmenu', e=>e.preventDefault());
+});
+
+/* =========================================================
+                    СТОП / NOW PLAYING
+   ========================================================= */
+function showNowPlaying(name){
+  $('nowPlaying').hidden = false;
+  $('nowPlaying').querySelector('.np-name').textContent = name;
+}
+function hideNowPlaying(){
+  $('nowPlaying').hidden = true;
+}
+function stopAll(){
+  state.stop = true;
+  state.running = false;
+  send({act:'stop'});
+  hideNowPlaying();
+}
+
+/* =========================================================
+                    ИНИЦИАЛИЗАЦИЯ
+   ========================================================= */
+$('backdrop').addEventListener('click', closeSheet);
+$('npStop').addEventListener('click', stopAll);
+$('btnStop').addEventListener('click', stopAll);
+$('btnRun').addEventListener('click', runProgram);
+$('btnClear').addEventListener('click', ()=>{
+  if(program.length && confirm('Очистить скрипт?')){
+    program = [];
+    renderProgram();
+  }
+});
+$('programRoot').addEventListener('input', saveProgram);
+
+buildDanceGrid();
+loadProgram();
+renderProgram();
+send({act:'ping'});   // проверка связи при старте
+</script>
+</body>
+</html>
